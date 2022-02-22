@@ -31,17 +31,25 @@ export class UserImageService {
       // Setting up S3 upload parameters
       const params = {
         Bucket: BUCKET_NAME,
-        Key: img.originalname, // File name you want to save as in S3
+        Key: img.originalname.toString(), // File name you want to save as in S3
         Body: img.buffer
       };
 
-      s3.createBucket(params, function (err, data) {
-        if (err) console.log(err, err.stack);
-        else console.log('Bucket Created Successfully', data.Location);
+      let userImgInfo = await s3.upload(params, async (err, data) => {
+        if (err) {
+          throw err;
+        }
+
+        console.log(`File uploaded successfully. ${data.Location}`);
+        let userImg = new UserImages();
+
+        userImg.name = payload.name;
+
+        userImg.img = data.Location;
+        userImgInfo = await this.userImagesRepository.save(userImg);
       });
 
-
-
+      return 'inserted succssefully';
     } catch (error) {
       throw error;
     }
