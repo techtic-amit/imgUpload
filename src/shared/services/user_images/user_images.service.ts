@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserImages } from 'src/modules/entity/user_images.entity';
 import { Repository } from 'typeorm';
@@ -12,7 +12,7 @@ export class UserImageService {
     private readonly userImagesRepository: Repository<UserImages>,
   ) { }
 
-  async insertUserImages(payload: any, images) {
+  async insertUserImages(payload: any, images, resp) {
     try {
 
       const ID = 'AKIARY4723JPJQENJRED';
@@ -35,7 +35,7 @@ export class UserImageService {
         Body: img.buffer
       };
 
-      let userImgInfo = await s3.upload(params, async (err, data) => {
+      await s3.upload(params, async (err, data) => {
         if (err) {
           throw err;
         }
@@ -46,10 +46,16 @@ export class UserImageService {
         userImg.name = payload.name;
 
         userImg.img = data.Location;
-        userImgInfo = await this.userImagesRepository.save(userImg);
+        let imgInfo = await this.userImagesRepository.save(userImg);
+        console.log(imgInfo);
+
+        return resp.status(HttpStatus.OK).json({
+          status: HttpStatus.OK,
+          data: imgInfo,
+        });
       });
 
-      return 'inserted succssefully';
+
     } catch (error) {
       throw error;
     }

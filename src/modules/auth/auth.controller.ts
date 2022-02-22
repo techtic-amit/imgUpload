@@ -31,12 +31,9 @@ export class AuthController {
   ): Promise<any> {
     try {
       return await this.userImageService
-        .insertUserImages(payload, images)
+        .insertUserImages(payload, images, res)
         .then((response_message) => {
-          return res.status(HttpStatus.OK).json({
-            status: HttpStatus.OK,
-            message: response_message,
-          });
+
         })
     } catch (error) {
       console.log(error);
