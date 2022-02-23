@@ -1,8 +1,8 @@
 import { HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { ConfigService as config } from 'src/common/config.service';
 import { UserImages } from 'src/modules/entity/user_images.entity';
 import { Repository } from 'typeorm';
-
 var AWS = require('aws-sdk');
 
 @Injectable()
@@ -15,8 +15,9 @@ export class UserImageService {
   async insertUserImages(payload: any, images, resp) {
     try {
 
-      const ID = 'AKIARY4723JPJQENJRED';
-      const SECRET = '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';
+
+      const ID = config.get('ACCESS_KEY');
+      const SECRET = config.get('SECRET_KEY');
 
       // The name of the bucket that you have created
       const BUCKET_NAME = 'test-s3-task-bucket';
