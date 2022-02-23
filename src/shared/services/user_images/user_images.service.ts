@@ -32,7 +32,7 @@ export class UserImageService {
       // Setting up S3 upload parameters
       const params = {
         Bucket: BUCKET_NAME,
-        Key: img.originalname.toString(), // File name you want to save as in S3
+        Key: payload.name.toString(), // File name you want to save as in S3
         Body: img.buffer
       };
 
