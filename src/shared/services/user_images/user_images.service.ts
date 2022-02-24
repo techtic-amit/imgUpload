@@ -15,7 +15,13 @@ export class UserImageService {
   async insertUserImages(payload: any, images, resp) {
     try {
 
+      let img = images[0];
+      console.log(img);
 
+      let type = img.mimetype.split("/");
+      if (type[0] != 'image') {
+        throw Error("File is not an image");
+      }
       const ID = config.get('ACCESS_KEY');
       const SECRET = config.get('SECRET_KEY');
 
@@ -26,8 +32,7 @@ export class UserImageService {
         secretAccessKey: SECRET
       });
       console.log(images);
-      let img = images[0];
-      console.log(img);
+
 
       // Setting up S3 upload parameters
       const params = {
@@ -63,7 +68,9 @@ export class UserImageService {
   }
   async getAllData() {
     try {
-      let userImgInfo = await this.userImagesRepository.find();
+      let userImgInfo = await this.userImagesRepository.createQueryBuilder('user_images')
+        .orderBy('user_images.id', 'DESC')
+        .getMany()
 
       return userImgInfo;
     } catch (err) {

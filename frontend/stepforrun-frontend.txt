@@ -1,0 +1,10 @@
+Note - First setup the node application and start the node application
+
+1) Please install the node_module using
+npm install
+
+2) change the port according to the node js application in the http-common.ts in  the baseURl (Line number - 3)
+
+3) start the project using
+npm start
+
